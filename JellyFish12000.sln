@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JellyFish12000", "JellyFish12000\JellyFish12000\JellyFish12000.csproj", "{375F47B3-1281-42F7-82D1-8FDE90DCEC7E}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "JellyFish12000Content", "JellyFish12000\JellyFish12000Content\JellyFish12000Content.contentproj", "{0FFC1312-5D4C-4182-B308-13AD9DC160E5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{375F47B3-1281-42F7-82D1-8FDE90DCEC7E}.Debug|x86.ActiveCfg = Debug|x86
+		{375F47B3-1281-42F7-82D1-8FDE90DCEC7E}.Debug|x86.Build.0 = Debug|x86
+		{375F47B3-1281-42F7-82D1-8FDE90DCEC7E}.Release|x86.ActiveCfg = Release|x86
+		{375F47B3-1281-42F7-82D1-8FDE90DCEC7E}.Release|x86.Build.0 = Release|x86
+		{0FFC1312-5D4C-4182-B308-13AD9DC160E5}.Debug|x86.ActiveCfg = Debug|x86
+		{0FFC1312-5D4C-4182-B308-13AD9DC160E5}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
