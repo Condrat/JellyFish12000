@@ -27,6 +27,7 @@ namespace JellyFish12000
 			Blending = 1,
 		};
 		
+
         static AnimationManager()
         {
             m_Random = new Random(Environment.TickCount);
@@ -35,7 +36,7 @@ namespace JellyFish12000
             //InitBlenderList();			
 			InitAnimationList();
 
-            // assume there is at least two animations
+			// assume there is at least two animations
 			m_CurrentAnimation = m_AnimationList[0];
 			m_NextAnimation = m_AnimationList[1];
         }

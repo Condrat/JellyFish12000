@@ -15,8 +15,7 @@ namespace JellyFish12000
         protected static Game m_Game = null;
         
         // FrameRate
-        private static float m_FPSWait0 = 1.0f; // Time to wait
-        private static float m_fpsCalcWait = m_FPSWait0;
+        private static float m_fpsCalcWait = 1.0f;
         private static float m_FrameCount = 0.0f;
         private static float m_FPS = 0.0f;
         public static float FrameRate
@@ -78,7 +77,7 @@ namespace JellyFish12000
             {
                 m_FPS = m_FrameCount;
                 m_FrameCount = 0;
-                m_fpsCalcWait += m_FPSWait0;
+                m_fpsCalcWait += 1.0f;
 
                 Console.WriteLine(String.Format("FPS: {0}", m_FPS));
             }
