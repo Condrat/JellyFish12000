@@ -32,6 +32,28 @@ namespace JellyFish12000.Blenders
 					result.SetLedColor(rib, row, newColor);
 				}
 			}
+            
+            for
+            (   int pendant = 0
+            ;   pendant < Dome.NUM_PENDANTS_MAX
+            ;   ++pendant
+            )
+            {
+                for (int led = 0; led < Dome.LEDS_PER_PENDANT_MAX; ++led)
+                {
+                    Color b = cur.GetPendantLEDColor(pendant, led);
+                    Color a = next.GetPendantLEDColor(pendant, led);
+
+                    Color newColor = new Color();
+                    newColor.A = (byte)(a.A * m_CurBlendValue + b.A * m_Reciprocal);
+                    newColor.R = (byte)(a.R * m_CurBlendValue + b.R * m_Reciprocal);
+                    newColor.G = (byte)(a.G * m_CurBlendValue + b.G * m_Reciprocal);
+                    newColor.B = (byte)(a.B * m_CurBlendValue + b.B * m_Reciprocal);
+
+                    result.SetPendantLEDColor(pendant, led, newColor);
+                }
+            }
+
 
 			base.Calculate(dt, cur, next);
 			return result;
