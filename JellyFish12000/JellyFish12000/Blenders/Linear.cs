@@ -33,11 +33,7 @@ namespace JellyFish12000.Blenders
                 }
             }
 
-            for
-            (int pendant = 0
-            ; pendant < Dome.NUM_PENDANTS_MAX
-            ; ++pendant
-            )
+            for (int pendant = 0; pendant < Dome.NUM_PENDANTS_MAX; ++pendant)
             {
                 for (int led = 0; led < Dome.LEDS_PER_PENDANT_MAX; ++led)
                 {
