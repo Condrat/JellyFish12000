@@ -10,10 +10,10 @@ namespace JellyFish12000
     {
         // Main engine components
         protected static GraphicsDeviceManager m_Graphics = null;
-		protected static ContentManager m_Content = null;
+        protected static ContentManager m_Content = null;
         protected static IGraphicsDeviceService m_DeviceService = null;
         protected static Game m_Game = null;
-        
+
         // FrameRate
         private static float m_fpsCalcWait = 1.0f;
         private static float m_FrameCount = 0.0f;
@@ -28,10 +28,10 @@ namespace JellyFish12000
             return m_Game;
         }
 
-		public static ContentManager GetContent()
-		{
-			return m_Content;
-		}
+        public static ContentManager GetContent()
+        {
+            return m_Content;
+        }
 
         public static GraphicsDevice GetDevice()
         {
@@ -39,10 +39,10 @@ namespace JellyFish12000
         }
 
         public static void Init(int width, int height)
-        {          
+        {
             m_Game = new Game();
-			m_Content = m_Game.Content;
-			m_Content.RootDirectory = "Content";
+            m_Content = m_Game.Content;
+            m_Content.RootDirectory = "Content";
 
             m_Graphics = new GraphicsDeviceManager(m_Game);
             m_Graphics.PreferredBackBufferFormat = SurfaceFormat.Color;
@@ -60,12 +60,12 @@ namespace JellyFish12000
 
             m_DeviceService = (IGraphicsDeviceService)m_Game.Services.GetService(typeof(IGraphicsDeviceService));
 
-			// just to preload the asset. m_Content will return a cached copy later on
-			Effect domeFX = m_Content.Load<Effect>("Dome");
-			Texture2D texture = m_Content.Load<Texture2D>("Sprite");
+            // just to preload the asset. m_Content will return a cached copy later on
+            Effect domeFX = m_Content.Load<Effect>("Dome");
+            Texture2D texture = m_Content.Load<Texture2D>("Sprite");
 
-			domeFX.Parameters["ParticleSize"].SetValue(2.5f);
-			domeFX.Parameters["Texture"].SetValue(texture);
+            domeFX.Parameters["ParticleSize"].SetValue(2.5f);
+            domeFX.Parameters["Texture"].SetValue(texture);
         }
 
         public static void Update(float dt)
@@ -90,7 +90,7 @@ namespace JellyFish12000
         }
 
         public static void Destroy()
-		{
+        {
         }
 
         public static void ResetDevice(int width, int height)
