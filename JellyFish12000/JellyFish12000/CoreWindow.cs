@@ -22,7 +22,7 @@ namespace JellyFish12000
 
 		protected float m_CameraArc = -135;
 		protected float m_CameraRotation = 0;
-		protected float m_CameraDistance = 750;
+		protected float m_CameraDistance = 800;
 
 		public CoreWindow() : base()
 		{
@@ -61,10 +61,10 @@ namespace JellyFish12000
 			switch (e.KeyCode)
 			{
 				case Keys.W:
-					m_CameraDistance -=MOVEMENT_DELTA;
+					m_CameraDistance -= 4 * MOVEMENT_DELTA;
 					break;
 				case Keys.S:
-                    m_CameraDistance += MOVEMENT_DELTA;
+                    m_CameraDistance += 4 * MOVEMENT_DELTA;
 					break;
 				case Keys.A:
                     m_CameraRotation -= MOVEMENT_DELTA;
@@ -117,7 +117,14 @@ namespace JellyFish12000
 
 				// Compute camera matrices.
 				float aspectRatio = (float)m_Viewport.Width / (float)m_Viewport.Height;
-				m_View = Matrix.CreateTranslation(0, -25, 0) *
+				
+                /*
+                m_View = Matrix.CreateTranslation(0, -25, 0) *
+							  Matrix.CreateRotationZ(MathHelper.ToRadians(m_CameraRotation)) *
+							  Matrix.CreateRotationX(MathHelper.ToRadians(m_CameraArc)) *
+							  Matrix.CreateLookAt(new Vector3(0, 0, -m_CameraDistance), new Vector3(0, 0, 0), Vector3.Up);
+                */
+                m_View = Matrix.CreateTranslation(0, -25, 0) *
 							  Matrix.CreateRotationZ(MathHelper.ToRadians(m_CameraRotation)) *
 							  Matrix.CreateRotationX(MathHelper.ToRadians(m_CameraArc)) *
 							  Matrix.CreateLookAt(new Vector3(0, 0, -m_CameraDistance), new Vector3(0, 0, 0), Vector3.Up);

@@ -49,7 +49,7 @@ namespace JellyFish12000.Animations
                 }
             }
 
-            m_CurrentFrame.SetLedColor(m_CurrentRibIndex, m_CurrentRowIndex, m_Color);            
+            m_CurrentFrame.SetDomeLEDColor(m_CurrentRibIndex, m_CurrentRowIndex, m_Color);            
         }
     }
 }

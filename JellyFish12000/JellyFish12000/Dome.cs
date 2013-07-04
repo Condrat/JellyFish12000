@@ -20,13 +20,22 @@ namespace JellyFish12000
         public const int LEDS_PER_PENDANT_MAX = 3;
         public const int TOTAL_LEDS_PENDANTS = NUM_PENDANTS_MAX * LEDS_PER_PENDANT_MAX;
 
-        public const int TOTAL_LEDS = TOTAL_LEDS_DOME + TOTAL_LEDS_PENDANTS;
+        public const int NUM_SATELLITES = 2;
+        public const int LEDS_PER_SATELLITE = 64;
+        public const int TOTAL_LEDS_SATELLITES = NUM_SATELLITES * LEDS_PER_SATELLITE;
+
+        private static int m_PendantLightIndexOffset = 0;
+        private static int m_SatelliteLightIndexOffset = 0;
+
+        public const int TOTAL_LEDS = TOTAL_LEDS_DOME + TOTAL_LEDS_PENDANTS + TOTAL_LEDS_SATELLITES;
 
         // TEMPORARY code until actual PendantController exists:
         // private static PendantController m_PendantController = null;
         private static int m_NumPendants = NUM_PENDANTS_MAX;
         private static int m_NumPendantLEDs = LEDS_PER_PENDANT_MAX;
 
+        // Controller of satellite devices such as pendants or other cars:
+                
         private static JellyVertex[] m_Lights = null;
         private static DynamicVertexBuffer m_VB = null;
         private static IndexBuffer m_IB = null;
@@ -42,6 +51,8 @@ namespace JellyFish12000
 
         private static Stopwatch m_GlobalTimer;
 
+
+
         static Dome()
         {
             Init();
@@ -55,6 +66,9 @@ namespace JellyFish12000
 
             m_GlobalTimer = new Stopwatch();
             m_GlobalTimer.Start();
+
+            MainForm.RefreshXBeeCOMPortList();
+
             m_DomeEffect = Core.GetContent().Load<Effect>("Dome");
 
             if (m_Socket == null && m_AttemptConnect)
@@ -90,7 +104,7 @@ namespace JellyFish12000
             {
                 for (int row = 0; row < Dome.LEDS_PER_RIB; ++row)
                 {
-                    Color newColor = nextFrame.GetLedColor(rib, row);
+                    Color newColor = nextFrame.GetDomeLEDColor(rib, row);
 
                     if (rib % 2 == 0)
                         bufferIndex = (rib * Dome.LEDS_PER_RIB + row) * 3;
@@ -108,7 +122,7 @@ namespace JellyFish12000
             {
                 for (int row = 0; row < Dome.LEDS_PER_RIB; ++row)
                 {
-                    Color newColor = nextFrame.GetLedColor(rib, row);
+                    Color newColor = nextFrame.GetDomeLEDColor(rib, row);
 
                     if (rib % 2 == 1)
                         bufferIndex = ((Dome.NUM_RIBS - rib + 17) * Dome.LEDS_PER_RIB + row) * 3;
@@ -124,6 +138,11 @@ namespace JellyFish12000
 
             if (m_RenderEnabled)
             {
+                RenderLEDs(nextFrame.GetDomeLEDColor, SetRendererDomeLight, Dome.NUM_RIBS, Dome.LEDS_PER_RIB);
+                RenderLEDs(nextFrame.GetPendantLEDColor, SetRendererPendantLight, Dome.NUM_PENDANTS_MAX, Dome.LEDS_PER_PENDANT_MAX);
+                RenderLEDs(nextFrame.GetSatelliteLEDColor, SetRendererSatelliteLight, Dome.NUM_SATELLITES, Dome.LEDS_PER_SATELLITE);
+                //RenderLEDs(nextFrame., SetRendererDomeLight, Dome.NUM_RIBS, Dome.LEDS_PER_RIB);
+                /*
                 for (int rib = 0; rib < Dome.NUM_RIBS; ++rib)
                 {
                     for (int row = 0; row < Dome.LEDS_PER_RIB; ++row)
@@ -132,9 +151,9 @@ namespace JellyFish12000
                         SetRendererDomeLight(rib, row, newColor);
                     }
                 }
-
+                */
                 // Update our pendants
-
+                /*
                 for (int pendant = 0; pendant < NUM_PENDANTS_MAX; ++pendant)
                 {
                     for (int led = 0; led < LEDS_PER_PENDANT_MAX; ++led)
@@ -143,6 +162,18 @@ namespace JellyFish12000
                         SetRendererPendantLight(pendant, led, newColor);
                     }
                 }
+                */
+                /*
+                // Finally update the satellites:
+                for (int satellite = 0; satellite < NUM_SATELLITES; ++satellite)
+                {
+                    for (int led = 0; led < LEDS_PER_SATELLITES; ++led)
+                    {
+                        Color newColor = nextFrame.GetPendantLEDColor(satellite, led);
+                        SetRendererSatelliteLight(satellite, led, newColor);
+                    }
+                }
+                 * */
                 // Send frame-light data to the simulator:
                 m_VB.SetData(m_Lights);
             }
@@ -162,6 +193,21 @@ namespace JellyFish12000
             //}
         }
         
+        protected delegate Color GetLEDColor(int index, int led);
+        protected delegate void SetLightColor(int index, int led, Color newColor);
+        protected static void RenderLEDs(GetLEDColor get, SetLightColor set, int numObjects, int numLEDs)
+        {
+            for (int obj = 0; obj < numObjects; ++obj)
+            {
+                for (int led = 0; led < numLEDs; ++led)
+                {
+                    Color newColor = get(obj, led);
+                    set(obj, led, newColor);
+                }
+            }
+        }
+
+
         public static void Render(Matrix view, Matrix proj)
         {
             if (!m_RenderEnabled) return;
@@ -243,49 +289,50 @@ namespace JellyFish12000
             float radiusDome = 250.0f;
             float heightDome = 250.0f;
 
-            float radiusPendants = 280.0f;
-            float heightPendants = 16.0f;
-            // Angle we want to render the pendants within:
-            float arcPendants = (float)Math.PI / 2;
 
-            float radiansBetweenPendants = (float)(arcPendants / NUM_PENDANTS_MAX);
-            // float radiansBetweenPendantLEDs = (float)((Math.PI / 2) / LEDS_PER_PENDANT_MAX);
-            float radiusBetweenPendantLEDs = 8.0f; // 32.0f / LEDS_PER_PENDANT_MAX;
+            int index = 0;
 
-            for (int rib = 0, curLight = 0; rib < NUM_RIBS; ++rib)
+
+            for (int rib = 0; rib < NUM_RIBS; ++rib)
             {
                 double ribAngle = rib * radiansBetweenRibs;
                 float cos = (float)Math.Cos(ribAngle);
                 float sin = (float)Math.Sin(ribAngle);
 
-                for (int led = 0; led < LEDS_PER_RIB; ++led)
+                for (int led = 0; led < LEDS_PER_RIB; ++led, index += 4)
                 {
                     float rowRadius = (float)Math.Cos(led * radiansBetweenRows) * radiusDome + 1.0f;
                     float rowHeight = (float)Math.Sin(led * radiansBetweenRows) * heightDome;
 
                     Vector3 pos = new Vector3(cos * rowRadius, sin * rowRadius, rowHeight);
-                    int index = curLight * 4;
-                    m_Lights[index + 0].Color = Color.Black;
-                    m_Lights[index + 1].Color = Color.Black;
-                    m_Lights[index + 2].Color = Color.Black;
-                    m_Lights[index + 3].Color = Color.Black;
+                    m_Lights[index + 0].Color = Color.White;
+                    m_Lights[index + 1].Color = Color.White;
+                    m_Lights[index + 2].Color = Color.White;
+                    m_Lights[index + 3].Color = Color.White;
 
                     m_Lights[index + 0].Position = pos;
                     m_Lights[index + 1].Position = pos;
                     m_Lights[index + 2].Position = pos;
                     m_Lights[index + 3].Position = pos;
-
-                    ++curLight;
                 }
             }
 
             // Init our pendant indicators
-            for 
-            (   int pendant = 0
-                ,   index = (NUM_RIBS * LEDS_PER_RIB) * 4
-            ;   pendant < NUM_PENDANTS_MAX
-            ;   ++pendant
-            )
+
+            // H
+            float radiusPendants = 280.0f;
+            float heightPendants = 16.0f;
+
+            // Angle over which we want to render the pendants:
+            float arcPendants = (float)Math.PI / 2;
+            float radiansBetweenPendants = (float)(arcPendants / NUM_PENDANTS_MAX);
+            // float radiansBetweenPendantLEDs = (float)((Math.PI / 2) / LEDS_PER_PENDANT_MAX);
+            
+            // The radius between pendant LEDs is spacing between LEDs in a pendant:
+            float radiusBetweenPendantLEDs = 8.0f; // 32.0f / LEDS_PER_PENDANT_MAX;
+
+            m_PendantLightIndexOffset = index / 4;
+            for (int pendant = 0; pendant < NUM_PENDANTS_MAX; ++pendant)
             {
                 // 3D-position: X and Y are on the ground, Z is up towards top of dome
                 double angle = ((pendant + 0.5) * radiansBetweenPendants) + (Math.PI / 4);
@@ -307,6 +354,41 @@ namespace JellyFish12000
                     m_Lights[index + 3].Position = pos;
                 }
             }
+
+            // Init our satellites:
+            float arcSatellites = 2.0f * (float)Math.PI;
+            float radiansBetweenSatelliteLEDs = (float)(arcSatellites / LEDS_PER_SATELLITE);
+            float radiusSatellites = 64.0f;
+            float xOffsetSatellites = 280.0f;
+            float yOffsetSatellites = 280.0f;
+            float zOffsetSatellites = 0.0f;
+
+            m_SatelliteLightIndexOffset = index / 4;
+            for (int satellite = 0; satellite < NUM_SATELLITES; ++satellite)
+            {
+                // 3D-position: X and Y are on the ground, Z is up towards top of dome
+
+                float xOffset = (satellite == 0) ? xOffsetSatellites : -xOffsetSatellites;
+
+                for (int led = 0; led < LEDS_PER_SATELLITE; ++led, index += 4)
+                {
+                    double angle = (led * radiansBetweenSatelliteLEDs);// +(Math.PI / 4);
+                    float cos = (float)Math.Cos(angle);
+                    float sin = (float)Math.Sin(angle);
+                    Vector3 pos = new Vector3(xOffset + cos * radiusSatellites, yOffsetSatellites + sin * radiusSatellites, zOffsetSatellites);
+                    m_Lights[index + 0].Color = Color.White;
+                    m_Lights[index + 1].Color = Color.White;
+                    m_Lights[index + 2].Color = Color.White;
+                    m_Lights[index + 3].Color = Color.White;
+
+                    m_Lights[index + 0].Position = pos;
+                    m_Lights[index + 1].Position = pos;
+                    m_Lights[index + 2].Position = pos;
+                    m_Lights[index + 3].Position = pos;
+                }
+            }
+
+
 
             m_VB.SetData(m_Lights);
         }
@@ -346,7 +428,16 @@ namespace JellyFish12000
         {
             if (m_RenderEnabled)
             {
-                int index = TOTAL_LEDS_DOME + (pendant * LEDS_PER_PENDANT_MAX + led);
+                int index = m_PendantLightIndexOffset + (pendant * LEDS_PER_PENDANT_MAX + led);
+                SetRendererLightColor(index, newColor);
+            }
+        }
+
+        public static void SetRendererSatelliteLight(int satellite, int led, Color newColor)
+        {
+            if (m_RenderEnabled)
+            {
+                int index = m_SatelliteLightIndexOffset + (satellite * LEDS_PER_SATELLITE + led);
                 SetRendererLightColor(index, newColor);
             }
         }

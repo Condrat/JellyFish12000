@@ -155,7 +155,7 @@ namespace JellyFish12000.Animations
                     }
 
                     // let's see if this is the head
-                    if (m_CurrentFrame.GetLedColor(pos.m_ribPos, pos.m_rowPos) != Color.Black &&
+                    if (m_CurrentFrame.GetDomeLEDColor(pos.m_ribPos, pos.m_rowPos) != Color.Black &&
                         worm.m_refractoryFrames <= 0 &&                        
                         positionIndex == 0)
                     {
@@ -170,7 +170,7 @@ namespace JellyFish12000.Animations
                     }
 
                     // right now we draw all of the worm at 100%
-                    m_CurrentFrame.SetLedColor(pos.m_ribPos, pos.m_rowPos, worm.m_Color);
+                    m_CurrentFrame.SetDomeLEDColor(pos.m_ribPos, pos.m_rowPos, worm.m_Color);
 
                     positionIndex++;
                 }

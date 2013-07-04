@@ -44,7 +44,7 @@ namespace JellyFish12000.Animations
                     radius = 0.0;
 
                 int rib = Dome.GetNearestRibByRadians(theta);
-                m_CurrentFrame.SetLedColor(rib, (int)radius, ColorManager.RandomColor()); 
+                m_CurrentFrame.SetDomeLEDColor(rib, (int)radius, ColorManager.RandomColor()); 
             }
 
             //m_CurrentFrame = output;

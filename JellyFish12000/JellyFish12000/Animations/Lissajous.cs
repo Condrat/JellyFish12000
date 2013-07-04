@@ -65,7 +65,7 @@ namespace JellyFish12000.Animations
 				int rib = Dome.GetNearestRibByRadians(drawTheta);
 			
 				Color newColor = ColorManager.RandomColor();
-                m_CurrentFrame.SetLedColor(rib, (int)r, newColor);
+                m_CurrentFrame.SetDomeLEDColor(rib, (int)r, newColor);
 			}
 
 			//m_CurrentFrame = output;

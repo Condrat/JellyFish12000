@@ -35,7 +35,7 @@ namespace JellyFish12000.Animations
 					brightness /= 2.0f;
 
 					Color newColor = m_Color * brightness;
-					output.SetLedColor(rib, row, newColor);
+					output.SetDomeLEDColor(rib, row, newColor);
 				}
 			}
 

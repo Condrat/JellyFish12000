@@ -49,7 +49,7 @@ namespace JellyFish12000.Animations
 
             foreach (Drop d in m_Drops)
             {
-                m_CurrentFrame.SetLedColor(d.rib, d.row, Color.White);
+                m_CurrentFrame.SetDomeLEDColor(d.rib, d.row, Color.White);
                 d.Update(dt);
                 if (d.row < 0)
                 {

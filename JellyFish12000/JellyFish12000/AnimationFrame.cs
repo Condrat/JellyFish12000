@@ -10,6 +10,7 @@ namespace JellyFish12000
     {
         Color[,] m_Lights = null;
         Color[,] m_Pendants = null;
+        Color[,] m_Satellites = null;
         // Actual number of pendants
 
         public AnimationFrame()
@@ -18,33 +19,27 @@ namespace JellyFish12000
             m_Lights.Initialize();
             m_Pendants = new Color[Dome.NUM_PENDANTS_MAX, Dome.LEDS_PER_PENDANT_MAX];
             m_Pendants.Initialize();
+            m_Satellites = new Color[Dome.NUM_SATELLITES, Dome.LEDS_PER_SATELLITE];
+            m_Satellites.Initialize();
         }
 
-        public Color SetLedColor(int rib, int led, Color newColor)
+        public void SetDomeLEDColor(int index, int led, Color newColor)
         {
-            Debug.Assert(rib >= 0 && rib < Dome.NUM_RIBS);
+            Debug.Assert(index >= 0 && index < Dome.NUM_RIBS);
             Debug.Assert(led >= 0 && led < Dome.LEDS_PER_RIB);
 
-            Color oldColor = m_Lights[rib, led];
-            m_Lights[rib, led] = newColor;
+            //Color oldColor = m_Lights[index, led];
+            m_Lights[index, led] = newColor;
 
-            return oldColor;
+            //return oldColor;
         }
 
-        public Color GetLedColor(int rib, int led)
+        public Color GetDomeLEDColor(int rib, int led)
         {
             Debug.Assert(rib >= 0 && rib < Dome.NUM_RIBS);
             Debug.Assert(led >= 0 && led < Dome.LEDS_PER_RIB);
 
             return m_Lights[rib, led];
-        }
-
-        public Color GetPendantLEDColor(int pendant, int led)
-        {
-            Debug.Assert(pendant >= 0 && pendant < Dome.NUM_PENDANTS_MAX);
-            Debug.Assert(led >= 0 && led < Dome.LEDS_PER_PENDANT_MAX);
-
-            return m_Pendants[pendant, led];
         }
 
         public void SetRibColor(int rib, Color newColor)
@@ -85,6 +80,8 @@ namespace JellyFish12000
         // Convenience functions:
         public int NumPendants
         {
+            // This utilizes Dome.NumPendants in case the number of pendants 
+            // is set to be less than the max.
             get { return Dome.NumPendants; }
         }
 
@@ -99,18 +96,27 @@ namespace JellyFish12000
         }
 
         // Pendant code:
-        public void SetPendantLEDColor(int pendantIndex, int ledIndex, Color newColor)
+
+        public Color GetPendantLEDColor(int index, int led)
         {
-            Debug.Assert((pendantIndex >= 0) && (pendantIndex < Dome.NUM_PENDANTS_MAX));
-            Debug.Assert((ledIndex >= 0) && (ledIndex < Dome.LEDS_PER_PENDANT_MAX));
-            m_Pendants[pendantIndex, ledIndex] = newColor;
+            Debug.Assert(index >= 0 && index < Dome.NUM_PENDANTS_MAX);
+            Debug.Assert(led >= 0 && led < Dome.LEDS_PER_PENDANT_MAX);
+
+            return m_Pendants[index, led];
         }
 
-        public void SetPendantColor(int pendantIndex, Color newColor)
+        public void SetPendantLEDColor(int index, int ledIndex, Color newColor)
+        {
+            Debug.Assert((index >= 0) && (index < Dome.NUM_PENDANTS_MAX));
+            Debug.Assert((ledIndex >= 0) && (ledIndex < Dome.LEDS_PER_PENDANT_MAX));
+            m_Pendants[index, ledIndex] = newColor;
+        }
+
+        public void SetPendantColor(int index, Color newColor)
         {
             for (int led = 0; led < this.NumPendantLEDs; led++)
             {
-                SetPendantLEDColor(pendantIndex, led, newColor);
+                SetPendantLEDColor(index, led, newColor);
             }
         }
 
@@ -126,5 +132,22 @@ namespace JellyFish12000
         {
             SetAllPendantsColor(Color.Black);
         }
+        // Satellite code:
+        public Color GetSatelliteLEDColor(int index, int led)
+        {
+            Debug.Assert(index >= 0 && index < Dome.NUM_SATELLITES);
+            Debug.Assert(led >= 0 && led < Dome.LEDS_PER_SATELLITE);
+
+            return m_Satellites[index, led];
+        }
+
+        public void SetSatelliteLEDColor(int index, int ledIndex, Color newColor)
+        {
+            Debug.Assert((index >= 0) && (index < Dome.NUM_SATELLITES));
+            Debug.Assert((ledIndex >= 0) && (ledIndex < Dome.LEDS_PER_SATELLITE));
+            m_Satellites[index, ledIndex] = newColor;
+        }
+
+
     }
 }

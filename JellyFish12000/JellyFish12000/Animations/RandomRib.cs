@@ -21,7 +21,7 @@ namespace JellyFish12000.Animations
             Color color = ColorManager.RandomColor();
             for (int row = 0; row < Dome.LEDS_PER_RIB; ++row)
             {
-                m_CurrentFrame.SetLedColor(rib, row, color);            
+                m_CurrentFrame.SetDomeLEDColor(rib, row, color);            
             }
         }
     }

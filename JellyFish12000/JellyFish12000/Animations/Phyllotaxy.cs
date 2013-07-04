@@ -57,14 +57,14 @@ namespace JellyFish12000.Animations
 				theta = theta - ((double)radians * (1.0f * Math.PI));
 
 				int rib = Dome.GetNearestRibByRadians(theta);                
-                m_CurrentFrame.SetLedColor(rib, (int)r, m_Color);
+                m_CurrentFrame.SetDomeLEDColor(rib, (int)r, m_Color);
 
 				// for some reason, this was only filling in from 0 to PI
 				// so, i guess we'll draw the other side?  i dunno... :)
 				theta += Math.PI;
 
 				rib = Dome.GetNearestRibByRadians(theta);
-                m_CurrentFrame.SetLedColor(rib, (int)r, m_Color);
+                m_CurrentFrame.SetDomeLEDColor(rib, (int)r, m_Color);
 			}
 
 

@@ -92,13 +92,16 @@ namespace JellyFish12000
         // Timing 
         private Stopwatch m_Timer = new Stopwatch();
         private Timer m_ColorUpdateTimer = new Timer();
-                
-		public MainForm()
+        static private RichTextBox m_DomeConsole = null;
+        static private ComboBox m_XBeeComPorts = null;
+        public MainForm()
 		{
-			InitializeComponent();			
+			InitializeComponent();
+            m_DomeConsole = DomeConsole;
+            m_XBeeComPorts = XBeeComPorts;
             Core.Init(domeViewer1.ClientSize.Width, domeViewer1.ClientSize.Height);
 
-			Dome.Init();
+			//Dome.Init();
             ColorManager.Init();
 
             Application.Idle += delegate { Application_Idle(); };
@@ -124,6 +127,60 @@ namespace JellyFish12000
             AnimationManager.Update(dt);
             domeViewer1.Invalidate();    
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void domeViewer1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        public static void ConsoleWrite(String s)
+        {
+
+            m_DomeConsole.Text += s;
+        }
+        public static void ConsoleWriteLine(String s)
+        {
+
+            m_DomeConsole.Text += s + "\n";
+        }
+
+
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DomeConsole_TextChanged(object sender, EventArgs e)
+        {
+            // Stay scrolled to bottom
+            DomeConsole.SelectionStart = DomeConsole.Text.Length; //Set the current caret position at the end
+            DomeConsole.ScrollToCaret(); //Now scroll it automatically
+        }
+
+        public static ComboBox.ObjectCollection GetXBeeComPortList()
+        {
+            return m_XBeeComPorts.Items;
+        }
+
+        public static void RefreshXBeeCOMPortList()
+        {
+            m_XBeeComPorts.Items.Clear();
+            foreach (string port in SatelliteDevices.ListSerialPorts())
+            {
+                m_XBeeComPorts.Items.Add(port);
+            }
+            if (m_XBeeComPorts.Items.Count > 0)
+            {
+                m_XBeeComPorts.SelectedIndex = 0;
+            }
+        }
+
 
 		/*
 		private void TestButton_Click(object sender, EventArgs e)

@@ -39,6 +39,8 @@ namespace JellyFish12000
             // assume there is at least two animations
             m_CurrentAnimation = m_AnimationList[0];
             m_NextAnimation = m_AnimationList[1];
+            MainForm.ConsoleWriteLine("AM: Loading '" + m_CurrentAnimation.Name + "'");
+
         }
 
         private static void InitAnimationList()
@@ -123,6 +125,7 @@ namespace JellyFish12000
 
         private static Animation GetNextAnimation()
         {
+
             // once we've cycled through all the animations, randomize
             if (m_GetRandomAnimation)
             {
@@ -133,8 +136,9 @@ namespace JellyFish12000
                 m_CurrentAnimationIndex = 0;
                 m_GetRandomAnimation = true;
             }
-
-            return m_AnimationList[m_CurrentAnimationIndex];
+            Animation currentAnimation = m_AnimationList[m_CurrentAnimationIndex];
+            MainForm.ConsoleWriteLine("AM: Loading '" + currentAnimation.Name + "'");
+            return currentAnimation;
         }
 
         private static Blender GetNextBlender()

@@ -22,7 +22,7 @@ namespace JellyFish12000.Animations
 
             for (int rib = 0; rib < Dome.NUM_RIBS; ++rib)
             {
-                m_CurrentFrame.SetLedColor(rib, row, color);
+                m_CurrentFrame.SetDomeLEDColor(rib, row, color);
             }            
         }
     }

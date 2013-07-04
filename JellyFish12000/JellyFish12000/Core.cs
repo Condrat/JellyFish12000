@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
+
 namespace JellyFish12000
 {
     class Core
@@ -13,6 +14,7 @@ namespace JellyFish12000
         protected static ContentManager m_Content = null;
         protected static IGraphicsDeviceService m_DeviceService = null;
         protected static Game m_Game = null;
+
 
         // FrameRate
         private static float m_fpsCalcWait = 1.0f;

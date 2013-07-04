@@ -48,7 +48,7 @@ namespace JellyFish12000.Animations
                     test += delta;
                     v = test - Math.Truncate(test);
                     
-                    m_CurrentFrame.SetLedColor(rib, rState.row, ColorManager.GetColor(v));
+                    m_CurrentFrame.SetDomeLEDColor(rib, rState.row, ColorManager.GetColor(v));
                 }
 
                 rState.offset += dt * 0.5f;
