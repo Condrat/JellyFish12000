@@ -8,7 +8,7 @@ namespace JellyFish12000
         protected AnimationFrame m_CurrentFrame = new AnimationFrame();
 
         // Duration of the effect:
-        protected float m_Duration = 5.0f; //5 seconds is a good length for testing
+        protected float m_Duration = 35.0f; //5 seconds is a good length for testing
         protected float m_RunTime = 0.0f;
 
         // Adjust these to change the update speed:

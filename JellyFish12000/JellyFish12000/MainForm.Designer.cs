@@ -143,7 +143,7 @@
             this.ClientSize = new System.Drawing.Size(570, 529);
             this.Controls.Add(this.splitContainer1);
             this.Name = "MainForm";
-            this.Text = "test";
+            this.Text = "Jellyfish Simulator";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
