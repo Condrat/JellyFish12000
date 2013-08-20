@@ -20,6 +20,10 @@ namespace JellyFish12000.Animations
             Random random = new Random(Environment.TickCount);
             m_Color = Color.FromNonPremultiplied(random.Next(128) + 64, random.Next(128) + 64, random.Next(128) + 64, 255);
         }
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_STROBE, m_Color.R, m_Color.G, m_Color.B, 0, 0, 0);
+        }
 
 		public override void GenerateNewFrame(float dt)
 		{

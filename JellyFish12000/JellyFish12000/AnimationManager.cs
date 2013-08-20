@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 using Microsoft.Xna.Framework;
 using JellyFish12000.Animations;
@@ -44,7 +45,7 @@ namespace JellyFish12000
         }
 
         private static void InitAnimationList()
-        {
+        {           
             m_AnimationList.Add(new RibWalk());
             m_AnimationList.Add(new BidirectionalRain());
             m_AnimationList.Add(new PolarRose());
@@ -70,7 +71,7 @@ namespace JellyFish12000
             m_AnimationList.Add(new Hypocycloid());
             m_AnimationList.Add(new Test_AllGreen());
             m_AnimationList.Add(new StraightSine01());
-
+            
             //m_AnimationList.Add(new TestAnimation1());
         }
 
@@ -96,7 +97,15 @@ namespace JellyFish12000
                         // get the next animation we can blend to
                         m_NextAnimation = GetNextAnimation();
                         m_NextAnimation.Start();
-
+                        
+                        // Assign the satellite devices their pattern 
+                        // parameters and launch the transmission in a new thread
+                        SatelliteDevices.SetSatelliteParameters(m_NextAnimation.GenerateSatelliteParameters());
+                        Thread thread = new Thread(new ThreadStart(SatelliteDevices.UpdateSatellites));
+                        thread.IsBackground = true;
+                        thread.Start();
+                        
+                        //SatelliteDevices.UpdateSatellites();
                         m_State = State.Blending;
                     }
                     break;

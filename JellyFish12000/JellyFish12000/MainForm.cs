@@ -94,11 +94,23 @@ namespace JellyFish12000
         private Timer m_ColorUpdateTimer = new Timer();
         static private RichTextBox m_DomeConsole = null;
         static private ComboBox m_XBeeComPorts = null;
+        static private Button m_XBeeConnectButton = null;
+        static private Button m_XBeeFindDevicesButton = null;
+        static private Button m_XBeeEnableSatellitesButton = null;
+
         public MainForm()
 		{
 			InitializeComponent();
             m_DomeConsole = DomeConsole;
             m_XBeeComPorts = XBeeComPorts;
+            m_XBeeConnectButton = XBeeConnectButton;
+            m_XBeeFindDevicesButton = XBeeFindDevicesButton;
+            m_XBeeEnableSatellitesButton = XBeeEnableSatellitesButton;
+
+            m_XBeeFindDevicesButton.Enabled = false;
+            m_XBeeEnableSatellitesButton.Enabled = false;
+            SetConnectButtonText(false);
+            SetEnableSatellitesButtonText(false);
             Core.Init(domeViewer1.ClientSize.Width, domeViewer1.ClientSize.Height);
 
 			//Dome.Init();
@@ -130,7 +142,7 @@ namespace JellyFish12000
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-
+            ConsoleGoodWriteLine("Instructions: Select COM port of XBee, click connect, click Discover nodes, click again if not all nodes detected.  Click enable satellites to send data out to satellites.");
         }
 
         private void domeViewer1_Click(object sender, EventArgs e)
@@ -140,15 +152,41 @@ namespace JellyFish12000
 
         public static void ConsoleWrite(String s)
         {
-
-            m_DomeConsole.Text += s;
+            MethodInvoker action = delegate
+            {   
+                m_DomeConsole.SelectionColor = Color.Black;
+                m_DomeConsole.AppendText(s);
+            };
+            m_DomeConsole.BeginInvoke(action);
         }
         public static void ConsoleWriteLine(String s)
         {
-
-            m_DomeConsole.Text += s + "\n";
+            MethodInvoker action = delegate
+            {   
+                m_DomeConsole.SelectionColor = Color.Black;
+                m_DomeConsole.AppendText(s + "\n");
+            };
+            m_DomeConsole.BeginInvoke(action);
         }
 
+        public static void ConsoleGoodWriteLine(String s)
+        {
+            MethodInvoker action = delegate
+            {   
+                m_DomeConsole.SelectionColor = Color.DarkGreen;
+                m_DomeConsole.AppendText(s + "\n");
+            };
+            m_DomeConsole.BeginInvoke(action);
+        }
+        public static void ConsoleErrorWriteLine(String s)
+        {
+            MethodInvoker action = delegate
+            {   
+                m_DomeConsole.SelectionColor = Color.DarkRed;
+                m_DomeConsole.AppendText(s + "\n");
+            };
+            m_DomeConsole.BeginInvoke(action);
+        }
 
 
         private void groupBox1_Enter(object sender, EventArgs e)
@@ -180,6 +218,92 @@ namespace JellyFish12000
                 m_XBeeComPorts.SelectedIndex = 0;
             }
         }
+
+        public static void SetConnectButtonText(bool connected = true)
+        {
+            if (connected)
+            {
+                m_XBeeConnectButton.ForeColor = Color.DarkRed;
+                m_XBeeConnectButton.Text = "Disconnect";
+            }
+            else
+            {
+                m_XBeeConnectButton.ForeColor = Color.DarkGreen;
+                m_XBeeConnectButton.Text = "Connect";
+            }
+        }
+
+        private void XBeeConnectButton_Click(object sender, EventArgs e)
+        {
+            if (!SatelliteDevices.IsConnected)
+            {
+                string port = m_XBeeComPorts.SelectedItem.ToString();
+                ConsoleWrite("XB: Connecting to wireless device on " + port + " ... ");
+
+                if (SatelliteDevices.Connect(port))
+                {
+                    ConsoleGoodWriteLine("CONNECTED!");
+                    SetConnectButtonText(true);
+                    m_XBeeFindDevicesButton.Enabled = true;
+                    m_XBeeEnableSatellitesButton.Enabled = true;
+                }
+                else
+                {
+                    ConsoleErrorWriteLine("Error connecting to COM port!");
+                }
+            }
+            else
+            {
+                ConsoleWrite("XB: Disconnect.");
+                SatelliteDevices.Disconnect();
+                SetConnectButtonText(false);
+                m_XBeeFindDevicesButton.Enabled = false;
+                m_XBeeEnableSatellitesButton.Enabled = false;
+
+            }
+        }
+
+        private void XBeeFindDevicesButton_Click(object sender, EventArgs e)
+        {
+            SatelliteDevices.FindDevices();
+        }
+
+        public static void SetEnableSatellitesButtonText(bool enabled = true)
+        {
+            if (enabled)
+            {
+                m_XBeeEnableSatellitesButton.ForeColor = Color.DarkRed;
+                m_XBeeEnableSatellitesButton.Text = "Disable Satellites";
+            }
+            else
+            {
+                m_XBeeEnableSatellitesButton.ForeColor = Color.DarkGreen;
+                m_XBeeEnableSatellitesButton.Text = "Enable Satellites";
+            }
+        }
+
+
+        private void XBeeEnableSatellitesButton_Click(object sender, EventArgs e)
+        {
+            if (!SatelliteDevices.IsEnabled)
+            {
+                ConsoleWrite("XB: Enabling Satellites");
+                SatelliteDevices.IsEnabled = true;
+                SetEnableSatellitesButtonText(true);
+                
+            }
+            else
+            {
+                ConsoleWrite("XB: Disabling Satellites");
+                SatelliteDevices.IsEnabled = false;
+                SetEnableSatellitesButtonText(false);
+            }
+        }
+
+        
+
+
+
 
 
 		/*

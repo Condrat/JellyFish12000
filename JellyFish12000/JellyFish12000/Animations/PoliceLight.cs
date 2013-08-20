@@ -23,6 +23,10 @@ namespace JellyFish12000.Animations
             m_ColorA = ColorManager.RandomColor();
             m_ColorB = ColorManager.RandomColor();
         }
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_POLICE, m_ColorA.R, m_ColorA.G, m_ColorA.B, m_ColorB.R, m_ColorB.G, m_ColorB.B);
+        }
 
 		public override void GenerateNewFrame(float dt)
 		{

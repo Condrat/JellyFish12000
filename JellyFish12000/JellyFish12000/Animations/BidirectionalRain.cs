@@ -48,6 +48,11 @@ namespace JellyFish12000.Animations
                 m_Drops.Add(new Drop(rib, row, dir));
             }
         }
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_GLITTER, 0, 0, 0);
+        }
+
 
         public override void GenerateNewFrame(float dt)
         {

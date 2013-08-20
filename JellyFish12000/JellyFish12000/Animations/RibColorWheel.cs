@@ -11,6 +11,10 @@ namespace JellyFish12000.Animations
             m_Name = "Rib Color Wheel";
             UpdatePeriod = 0.0f;
         }
+        public virtual SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_RAINBOW);
+        }
 
         public override void GenerateNewFrame(float dt)
         {

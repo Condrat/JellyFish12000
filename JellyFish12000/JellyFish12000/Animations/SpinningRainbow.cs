@@ -34,6 +34,10 @@ namespace JellyFish12000.Animations
                 offset += delta;
             }
         }
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_RAINBOW, 0,0,0, 1, 2);
+        }
 
         public override void GenerateNewFrame(float dt)
         {

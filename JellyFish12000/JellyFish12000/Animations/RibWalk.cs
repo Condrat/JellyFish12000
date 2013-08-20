@@ -15,7 +15,12 @@ namespace JellyFish12000.Animations
             m_Name = "Rib Walk";
             UpdatePeriod = 0.05f;
         }
-            
+
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_RAINBOWLINES, 0, 0, 0, 1, 2);
+        }
+
         public override void GenerateNewFrame(float dt)
         {
             Reduce(.9f);

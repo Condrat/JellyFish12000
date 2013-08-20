@@ -13,6 +13,10 @@ namespace JellyFish12000.Animations
 			UpdatePeriod = 0.03f;
 			m_Name = "Hypocycloid";
 		}
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_GLITTER, 0, 0, 0, 0, 0, 0);
+        }
 
 		public override void GenerateNewFrame(float dt)
 		{

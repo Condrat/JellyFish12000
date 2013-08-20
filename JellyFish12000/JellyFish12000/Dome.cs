@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using System.Net.Sockets;
 using System.Diagnostics;
+using System.Threading;
 
 namespace JellyFish12000
 {
@@ -11,23 +12,24 @@ namespace JellyFish12000
     {
         public const int NUM_RIBS = 36;
         public const int LEDS_PER_RIB = 50;
-        public const int TOTAL_LEDS_DOME = NUM_RIBS * LEDS_PER_RIB;
+        public const int NUM_PENDANTS_MAX = 32;
+        public const int LEDS_PER_PENDANT_MAX = 3;
+        public const int NUM_SATELLITES = 2;
+        public const int LEDS_PER_SATELLITE = 32;
+
         public const String JELLYBRAIN_ADDRESS = "10.0.1.29";
+        
+        public const int TOTAL_LEDS_DOME = NUM_RIBS * LEDS_PER_RIB;
 
         // These state a maximum number of pendants/LEDs for memory
         // allocation purposes.  There may actually be fewer of these.
-        public const int NUM_PENDANTS_MAX = 32;
-        public const int LEDS_PER_PENDANT_MAX = 3;
         public const int TOTAL_LEDS_PENDANTS = NUM_PENDANTS_MAX * LEDS_PER_PENDANT_MAX;
-
-        public const int NUM_SATELLITES = 2;
-        public const int LEDS_PER_SATELLITE = 64;
         public const int TOTAL_LEDS_SATELLITES = NUM_SATELLITES * LEDS_PER_SATELLITE;
+
+        public const int TOTAL_LEDS = TOTAL_LEDS_DOME + TOTAL_LEDS_PENDANTS + TOTAL_LEDS_SATELLITES;
 
         private static int m_PendantLightIndexOffset = 0;
         private static int m_SatelliteLightIndexOffset = 0;
-
-        public const int TOTAL_LEDS = TOTAL_LEDS_DOME + TOTAL_LEDS_PENDANTS + TOTAL_LEDS_SATELLITES;
 
         // TEMPORARY code until actual PendantController exists:
         // private static PendantController m_PendantController = null;
@@ -42,7 +44,7 @@ namespace JellyFish12000
         private static Effect m_DomeEffect = null;
 
         private static Socket m_Socket = null;
-        private static bool m_AttemptConnect = false;
+        private static bool m_AttemptConnect = true;
         private static bool m_RenderEnabled = true;
 
         // If the color is ~black, show a minimum bright point to indicate where the LED is.
@@ -50,7 +52,6 @@ namespace JellyFish12000
         private static int m_RenderMinimumBrightness = 24;
 
         private static Stopwatch m_GlobalTimer;
-
 
 
         static Dome()
@@ -70,16 +71,19 @@ namespace JellyFish12000
             MainForm.RefreshXBeeCOMPortList();
 
             m_DomeEffect = Core.GetContent().Load<Effect>("Dome");
-
             if (m_Socket == null && m_AttemptConnect)
             {
+                MainForm.ConsoleWrite("Connecting to dome...");
                 try
                 {
                     m_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
                     m_Socket.Connect(JELLYBRAIN_ADDRESS, 80);
+                    MainForm.ConsoleGoodWriteLine("Connected!");
                 }
                 catch (Exception e)
                 {
+                    MainForm.ConsoleErrorWriteLine("Could not connect!");
+                    m_AttemptConnect = false;
                     m_Socket.Dispose();
                     m_Socket = null;
                     e.ToString();
@@ -141,45 +145,32 @@ namespace JellyFish12000
                 RenderLEDs(nextFrame.GetDomeLEDColor, SetRendererDomeLight, Dome.NUM_RIBS, Dome.LEDS_PER_RIB);
                 RenderLEDs(nextFrame.GetPendantLEDColor, SetRendererPendantLight, Dome.NUM_PENDANTS_MAX, Dome.LEDS_PER_PENDANT_MAX);
                 RenderLEDs(nextFrame.GetSatelliteLEDColor, SetRendererSatelliteLight, Dome.NUM_SATELLITES, Dome.LEDS_PER_SATELLITE);
-                //RenderLEDs(nextFrame., SetRendererDomeLight, Dome.NUM_RIBS, Dome.LEDS_PER_RIB);
-                /*
-                for (int rib = 0; rib < Dome.NUM_RIBS; ++rib)
-                {
-                    for (int row = 0; row < Dome.LEDS_PER_RIB; ++row)
-                    {
-                        Color newColor = nextFrame.GetLedColor(rib, row);
-                        SetRendererDomeLight(rib, row, newColor);
-                    }
-                }
-                */
-                // Update our pendants
-                /*
-                for (int pendant = 0; pendant < NUM_PENDANTS_MAX; ++pendant)
-                {
-                    for (int led = 0; led < LEDS_PER_PENDANT_MAX; ++led)
-                    {
-                        Color newColor = nextFrame.GetPendantLEDColor(pendant, led);
-                        SetRendererPendantLight(pendant, led, newColor);
-                    }
-                }
-                */
-                /*
-                // Finally update the satellites:
-                for (int satellite = 0; satellite < NUM_SATELLITES; ++satellite)
-                {
-                    for (int led = 0; led < LEDS_PER_SATELLITES; ++led)
-                    {
-                        Color newColor = nextFrame.GetPendantLEDColor(satellite, led);
-                        SetRendererSatelliteLight(satellite, led, newColor);
-                    }
-                }
-                 * */
+
                 // Send frame-light data to the simulator:
                 m_VB.SetData(m_Lights);
             }
 
 
             // Send frame-light data to the Jellyfish light controller:
+            //MainForm.ConsoleWriteLine(".");
+
+            if (m_Socket == null && m_AttemptConnect)
+            {
+                MainForm.ConsoleWriteLine("Connecting to dome...");
+                try
+                {
+                    m_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+                    m_Socket.Connect(JELLYBRAIN_ADDRESS, 80);
+                }
+                catch (Exception e)
+                { 
+                    m_Socket.Dispose();
+                    m_Socket = null;
+                    m_AttemptConnect = false;
+                    e.ToString();
+                }
+            }
+            
             if (m_Socket != null)
             {
                 byte[] recvBuffer = new byte[16];
@@ -187,11 +178,16 @@ namespace JellyFish12000
                 m_Socket.Receive(recvBuffer, 1, 0);
             }
 
-            //if (m_PendantController != null)
+            //if (m_ShowOnce)
             //{
-            //    m_PendantController.Update(nextFrame.PendantData);
+            //    m_ShowOnce = false;
+            //    //SatelliteDevices.UpdateSatellites(nextFrame.SatelliteData, nextFrame.PendantData);
             //}
+            
+
         }
+
+
         
         protected delegate Color GetLEDColor(int index, int led);
         protected delegate void SetLightColor(int index, int led, Color newColor);
@@ -487,6 +483,7 @@ namespace JellyFish12000
         {
             m_NumPendantLEDs = numLEDs;
         }
+
     }
 }
 

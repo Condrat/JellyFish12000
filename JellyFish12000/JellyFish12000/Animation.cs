@@ -18,6 +18,67 @@ namespace JellyFish12000
 
         private Color m_ColorPink = new Color(255, 160, 248);
 
+        public struct SatelliteParameters
+        {
+            public SatelliteParameters(byte pattern, byte r = 0, byte g = 0, byte b = 0, byte param0 = 0, byte param1 = 0, byte param2 = 0)
+            {
+                this.pattern = pattern;
+                this.r = r;
+                this.g = g;
+                this.b = b;
+                this.param0 = param0;
+                this.param1 = param1;
+                this.param2 = param2;
+            }
+            public byte pattern;
+            public byte r;
+            public byte g;
+            public byte b;
+            public byte param0;
+            public byte param1;
+            public byte param2;
+        };
+
+        //protected SatelliteParameters m_SatelliteParameters;
+
+        public const byte PATTERN_BLANK             = 0;
+        public const byte PATTERN_LINEAR            = 1;
+        // rgb = color, param0 direction param1 speed
+        // rgb == 0 ==> rainbow; param1 = speed
+        public const byte PATTERN_RAINBOW           = 2;
+        // param0 = direction, param1 = speed
+        public const byte PATTERN_GLITTER           = 3;
+        // rgb = dominant color, params = flash color
+        public const byte PATTERN_RAINBOWLINES      = 4;
+        // moving rainbow lines.  Param0 affects direction
+        public const byte PATTERN_TRAFFIC           = 5;
+        // Traffic has dots moving two different directions
+        // rgb and params specify two colors
+        public const byte PATTERN_STROBE            = 6;
+        // rgb for strobe color; param0 = use rainbow strobe
+        // param1 == speed of strobe (bitmask; larger = less frequent; default = 0x3)
+        public const byte PATTERN_SEIZURE           = 7;
+        public const byte PATTERN_POLICE            = 8;
+        // Two colors
+        public const byte PATTERN_POLICEFADE        = 9;
+        // two colors
+        //public const byte PATTERN_ = 1;
+        //public const byte PATTERN_ = 1;
+
+        
+        /*
+        protected void SetSatelliteParameters(byte pattern, byte r = 0, byte g = 0, byte b = 0, byte param0 = 0, byte param1 = 0, byte param2 = 0)
+        {
+            m_SatelliteParameters.pattern = pattern;
+            m_SatelliteParameters.r = r;
+            m_SatelliteParameters.g = g;
+            m_SatelliteParameters.b = b;
+            m_SatelliteParameters.param0 = param0;
+            m_SatelliteParameters.param1 = param1;
+            m_SatelliteParameters.param2 = param2;
+
+        }
+        */
         protected float UpdatePeriod
         {
             set
@@ -70,7 +131,13 @@ namespace JellyFish12000
 
             return false;
         }
-                
+
+        public virtual SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_RAINBOW);
+        }
+
+
         virtual public void GeneratePendantGraphics(float dt)
         {
             // Remember that the pendants are very bright, and can be irritating
@@ -106,13 +173,25 @@ namespace JellyFish12000
 
         virtual public void GenerateSatelliteGraphics(float dt)
         {
-            // Grabs the graphics from the Dome:
+            /*
+            float elapsedSeconds = Convert.ToSingle(Dome.GetElapsedMilliseconds() % 1000) / 1000;
             for (int led = 0; led < Dome.LEDS_PER_SATELLITE; ++led)
             {
+                Color color = new Color(elapsedSeconds, 0, 0);
+                GetCurrentFrame().SetSatelliteLEDColor(0, led, color);
+                GetCurrentFrame().SetSatelliteLEDColor(1, led, color);
+            }
+             * */
+            
+            // Grabs the graphics from the Dome, from the center ring:
+            for (int led = 0; led < Dome.LEDS_PER_SATELLITE; ++led)
+            {
+                // Modulo the number of ribs in case LEDS_PER_SATELLITE > NUM_RIBS
                 Color color = GetCurrentFrame().GetDomeLEDColor(led % Dome.NUM_RIBS, Dome.LEDS_PER_RIB / 2);
                 GetCurrentFrame().SetSatelliteLEDColor(0, led, color);
                 GetCurrentFrame().SetSatelliteLEDColor(1, led, color);
-            }            
+            } 
+            
             /*
             float elapsedSeconds = Convert.ToSingle(Dome.GetElapsedMilliseconds() % 1000) / 1000;
 

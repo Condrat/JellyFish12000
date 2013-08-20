@@ -133,6 +133,10 @@ namespace JellyFish12000.Animations
                 m_wormList.Add(newWorm);
             }
         }
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_GLITTER, 0, 0, 0, 0, 0, 0);
+        }
 
         public override void  GenerateNewFrame(float dt)
         {

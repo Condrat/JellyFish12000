@@ -94,7 +94,7 @@ namespace JellyFish12000
         {
             get { return m_Pendants; }
         }
-
+        
         // Pendant code:
 
         public Color GetPendantLEDColor(int index, int led)
@@ -132,7 +132,14 @@ namespace JellyFish12000
         {
             SetAllPendantsColor(Color.Black);
         }
+
         // Satellite code:
+
+        public Color[,] SatelliteData
+        {
+            get { return m_Satellites; }
+        }
+
         public Color GetSatelliteLEDColor(int index, int led)
         {
             Debug.Assert(index >= 0 && index < Dome.NUM_SATELLITES);

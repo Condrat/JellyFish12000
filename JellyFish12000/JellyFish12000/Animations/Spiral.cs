@@ -23,6 +23,11 @@ namespace JellyFish12000.Animations
             m_Color = Color.FromNonPremultiplied(random.Next(128) + 128, random.Next(128) + 128, random.Next(128) + 128, 255);
         }
 
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_TRAFFIC, 0, 0, 0, 255, 255, 255);
+        }
+
         public override void GenerateNewFrame(float dt)
         {
             Reduce(.95f);

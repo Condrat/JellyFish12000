@@ -39,7 +39,10 @@ namespace JellyFish12000.Animations
 				m_Rings.Add(newRing);
 			}
 		}
-
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_STROBE, 64, 64, 64, 1, 0, 0);
+        }
 		public override void GenerateNewFrame(float dt)
 		{
 			m_currentSinParameter += m_sinWaveIncrement;

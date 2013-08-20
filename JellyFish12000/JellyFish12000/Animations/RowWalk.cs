@@ -12,6 +12,10 @@ namespace JellyFish12000.Animations
             m_Name = "Row Walk";
             UpdatePeriod = 0.025f;
         }
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_RAINBOWLINES, 0, 0, 0, 0, 0, 0);
+        }
           
         public override void GenerateNewFrame(float dt)        
         {

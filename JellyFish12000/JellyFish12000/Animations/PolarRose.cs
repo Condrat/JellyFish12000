@@ -16,6 +16,12 @@ namespace JellyFish12000.Animations
             m_Name = "PolarRose";
         }
 
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_SEIZURE, 255, 255, 255);
+        }
+
+
         public override void  GenerateNewFrame(float dt)
         {
             Reduce(.9f);

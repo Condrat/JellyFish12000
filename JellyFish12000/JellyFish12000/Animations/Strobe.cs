@@ -16,7 +16,13 @@ namespace JellyFish12000.Animations
             m_Duration = 10.0f;
             m_Name = "Strobe";
             UpdatePeriod = 0.01f;
-        }        
+        }
+
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_STROBE, 255, 255, 255, 0, 0xF, 0);
+        }
+
 
 		public override void GenerateNewFrame(float dt)
 		{

@@ -29,13 +29,14 @@
 		private void InitializeComponent()
 		{
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.domeViewer1 = new JellyFish12000.DomeViewer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.DomeConsole = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.XBeeEnableSatellitesButton = new System.Windows.Forms.Button();
+            this.XBeeFindDevicesButton = new System.Windows.Forms.Button();
             this.XBeeComPorts = new System.Windows.Forms.ComboBox();
             this.XBeeConnectButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.domeViewer1 = new JellyFish12000.DomeViewer();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -61,6 +62,16 @@
             this.splitContainer1.Size = new System.Drawing.Size(570, 529);
             this.splitContainer1.SplitterDistance = 407;
             this.splitContainer1.TabIndex = 4;
+            // 
+            // domeViewer1
+            // 
+            this.domeViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.domeViewer1.Location = new System.Drawing.Point(0, 0);
+            this.domeViewer1.Name = "domeViewer1";
+            this.domeViewer1.Size = new System.Drawing.Size(570, 407);
+            this.domeViewer1.TabIndex = 4;
+            this.domeViewer1.Text = "domeViewer1";
+            this.domeViewer1.Click += new System.EventHandler(this.domeViewer1_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -90,7 +101,8 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.XBeeEnableSatellitesButton);
+            this.panel1.Controls.Add(this.XBeeFindDevicesButton);
             this.panel1.Controls.Add(this.XBeeComPorts);
             this.panel1.Controls.Add(this.XBeeConnectButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -98,6 +110,26 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(564, 24);
             this.panel1.TabIndex = 0;
+            // 
+            // XBeeEnableSatellitesButton
+            // 
+            this.XBeeEnableSatellitesButton.Location = new System.Drawing.Point(301, 0);
+            this.XBeeEnableSatellitesButton.Name = "XBeeEnableSatellitesButton";
+            this.XBeeEnableSatellitesButton.Size = new System.Drawing.Size(95, 23);
+            this.XBeeEnableSatellitesButton.TabIndex = 20;
+            this.XBeeEnableSatellitesButton.Text = "Enable Satellites";
+            this.XBeeEnableSatellitesButton.UseVisualStyleBackColor = true;
+            this.XBeeEnableSatellitesButton.Click += new System.EventHandler(this.XBeeEnableSatellitesButton_Click);
+            // 
+            // XBeeFindDevicesButton
+            // 
+            this.XBeeFindDevicesButton.Location = new System.Drawing.Point(209, 0);
+            this.XBeeFindDevicesButton.Name = "XBeeFindDevicesButton";
+            this.XBeeFindDevicesButton.Size = new System.Drawing.Size(85, 23);
+            this.XBeeFindDevicesButton.TabIndex = 19;
+            this.XBeeFindDevicesButton.Text = "Find Devices";
+            this.XBeeFindDevicesButton.UseVisualStyleBackColor = true;
+            this.XBeeFindDevicesButton.Click += new System.EventHandler(this.XBeeFindDevicesButton_Click);
             // 
             // XBeeComPorts
             // 
@@ -116,25 +148,7 @@
             this.XBeeConnectButton.TabIndex = 17;
             this.XBeeConnectButton.Text = "Connect";
             this.XBeeConnectButton.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(209, 0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(85, 23);
-            this.button1.TabIndex = 19;
-            this.button1.Text = "Find Children";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // domeViewer1
-            // 
-            this.domeViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.domeViewer1.Location = new System.Drawing.Point(0, 0);
-            this.domeViewer1.Name = "domeViewer1";
-            this.domeViewer1.Size = new System.Drawing.Size(570, 407);
-            this.domeViewer1.TabIndex = 4;
-            this.domeViewer1.Text = "domeViewer1";
-            this.domeViewer1.Click += new System.EventHandler(this.domeViewer1_Click);
+            this.XBeeConnectButton.Click += new System.EventHandler(this.XBeeConnectButton_Click);
             // 
             // MainForm
             // 
@@ -143,7 +157,7 @@
             this.ClientSize = new System.Drawing.Size(570, 529);
             this.Controls.Add(this.splitContainer1);
             this.Name = "MainForm";
-            this.Text = "Jellyfish Simulator";
+            this.Text = "Jellyfish12000 Simulator";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -164,7 +178,8 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button XBeeConnectButton;
         private System.Windows.Forms.ComboBox XBeeComPorts;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button XBeeFindDevicesButton;
+        private System.Windows.Forms.Button XBeeEnableSatellitesButton;
 
 
     }

@@ -12,6 +12,10 @@ namespace JellyFish12000.Animations
             m_Name = "Random Row";
             UpdatePeriod = 0.02f;
         }
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_STROBE, 0, 0, 0, 1, 0, 0);
+        }
 
         public override void GenerateNewFrame(float dt)
         {

@@ -11,6 +11,10 @@ namespace JellyFish12000.Animations
 			m_Name = "Color Wheel";
             UpdatePeriod = 0.0f;            
 		}
+        public override SatelliteParameters GenerateSatelliteParameters()
+        {
+            return new SatelliteParameters(PATTERN_LINEAR, 0, 0, 0, 0, 0, 0);
+        }
         	
 		public override void GenerateNewFrame(float dt)
 		{
