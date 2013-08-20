@@ -1,0 +1,14 @@
+The new XBee code requires the MFToolkit. Grab from:
+
+https://mftoolkit.codeplex.com/SourceControl/latest
+
+Save it somewhere, compile the Zigbee Console sub-project.  It should produce an 
+IO library and an XBee library.
+
+Under the JellyFish12000 References under Solution Explorer add the IO and
+XBee library by pointing to the compiled DLLs, e.g.:
+
+<path_to_mftoolkit>\IO\bin\Debug\IO.dll
+<path_to_mftoolkit>\Zigbee\bin\Debug\XBee.dll
+
+
